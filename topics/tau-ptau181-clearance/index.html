@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="多功能肽从识别 pTau181 到溶酶体水解的六步机制图解：实线画已验证的细胞生物学，虚线画待检验的假设，术语附中英对照。">
+<title>pTau181 肽机制图解｜识别 · 解聚 · 自噬递送 · 水解</title>
+<style>
+/* Layout: 单列读物 — 六个"站点"沿左侧标尺向下排列，每站一图一文；图可横向滚动 */
+:root{
+  --paper:#f6f8fa;
+  --surface:#ffffff;
+  --surface-2:#eef2f6;
+  --ink:#161b22;
+  --ink-soft:#5b6673;
+  --rule:#d6dce4;
+  --known:#0f6b70;        /* 已验证的通用生物学 */
+  --known-wash:#e2f0f0;
+  --hypo:#8f5300;         /* 本方案的待验证假设 */
+  --hypo-wash:#faecd8;
+  --patho:#962b64;        /* tau 病理物种 / 失败分支 */
+  --patho-wash:#f8e5ee;
+  --display:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Times New Roman",Georgia,serif;
+  --body:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Hiragino Sans GB",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --term:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,"Liberation Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0d1116; --surface:#141a21; --surface-2:#1b222a; --ink:#e6ecf3; --ink-soft:#97a3b2; --rule:#2a333e;
+  --known:#63d2d6; --known-wash:#112a2c; --hypo:#eeb257; --hypo-wash:#2e2414; --patho:#ef90bd; --patho-wash:#2c1723;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0d1116; --surface:#141a21; --surface-2:#1b222a; --ink:#e6ecf3; --ink-soft:#97a3b2; --rule:#2a333e;
+  --known:#63d2d6; --known-wash:#112a2c; --hypo:#eeb257; --hypo-wash:#2e2414; --patho:#ef90bd; --patho-wash:#2c1723;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+.backnav{font-family:var(--term);font-size:11px;letter-spacing:.1em;margin-bottom:20px}
+.backnav a{color:var(--ink-soft);text-decoration:none}
+.backnav a:hover{color:var(--known)}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.75;margin:0;
+     -webkit-font-smoothing:antialiased;font-size:15px}
+.wrap{max-width:880px;margin:0 auto;padding-inline:20px;padding-block:40px 64px}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;line-height:1.3;margin:0}
+h1{font-size:clamp(26px,5.2vw,40px);letter-spacing:-.01em}
+h2{font-size:clamp(19px,3.6vw,25px)}
+h3{font-size:16px}
+p{margin:.7em 0}
+a{color:var(--known);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--hypo);outline-offset:2px;border-radius:2px}
+.eyebrow{font-family:var(--term);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px}
+.lede{font-size:17px;color:var(--ink-soft);max-width:62ch}
+/* 中英对照标注：中文为正文，英文为等宽小字 */
+.t em{font-family:var(--term);font-style:normal;font-size:.76em;color:var(--ink-soft);letter-spacing:.01em;padding-left:.35em}
+sup a{font-family:var(--term);font-size:10px;text-decoration:none;padding:0 1px}
+/* 确定性图例 */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0;padding:0;list-style:none}
+.legend li{display:flex;align-items:center;gap:8px;font-size:12.5px;background:var(--surface);
+  border:1px solid var(--rule);border-radius:999px;padding:5px 13px 5px 10px}
+.swatch{width:26px;height:0;border-top-width:2.5px;flex:none}
+.sw-k{border-top-style:solid;border-top-color:var(--known)}
+.sw-h{border-top-style:dashed;border-top-color:var(--hypo)}
+.sw-p{border-top-style:dashed;border-top-color:var(--patho)}
+.note{background:var(--surface-2);border-left:3px solid var(--rule);padding:14px 18px;margin:28px 0;font-size:13.5px;color:var(--ink-soft)}
+.note strong{color:var(--ink)}
+/* 站点 */
+section{margin-top:52px;padding-top:28px;border-top:1px solid var(--rule)}
+.step-no{font-family:var(--term);font-size:11.5px;letter-spacing:.12em;color:var(--ink-soft);display:block;margin-bottom:6px}
+.tag{font-family:var(--term);font-size:10.5px;letter-spacing:.06em;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-block;vertical-align:2px}
+.tag-k{background:var(--known-wash);color:var(--known)}
+.tag-h{background:var(--hypo-wash);color:var(--hypo)}
+/* 图 */
+figure{margin:26px 0 0}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:14px}
+.scroll svg{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--ink-soft);margin-top:10px;max-width:70ch}
+svg text{fill:currentColor}
+svg .lbl{font-family:var(--body);font-weight:500;font-size:13px}
+svg .en{font-family:var(--term);font-size:9.5px;fill:var(--ink-soft)}
+svg .arw{font-family:var(--body);font-weight:500;font-size:11px}
+svg .arwen{font-family:var(--term);font-size:9px;fill:var(--ink-soft)}
+svg .box{fill:var(--surface);stroke:var(--rule);stroke-width:1.2}
+svg .k{stroke:var(--known);fill:none;stroke-width:1.7}
+svg .h{stroke:var(--hypo);fill:none;stroke-width:1.7;stroke-dasharray:6 4}
+svg .hb{stroke:var(--hypo);fill:none;stroke-width:3;stroke-dasharray:7 4}
+svg .p{stroke:var(--patho);fill:none;stroke-width:1.7;stroke-dasharray:4 4}
+svg .mk-k{fill:var(--known)}
+svg .mk-h{fill:var(--hypo)}
+svg .mk-p{fill:var(--patho)}
+svg .tau{fill:var(--patho-wash);stroke:var(--patho);stroke-width:1.3}
+svg .pep{fill:var(--surface-2);stroke:var(--ink-soft);stroke-width:1.1}
+svg .seg-a{fill:var(--known-wash);stroke:var(--known);stroke-width:1.3}
+svg .seg-b{fill:var(--hypo-wash);stroke:var(--hypo);stroke-width:1.3}
+svg .seg-c{fill:var(--surface-2);stroke:var(--ink-soft);stroke-width:1.3}
+svg .ghost{fill:none;stroke:var(--ink-soft);stroke-width:1.1;stroke-dasharray:3 3}
+/* 方程 */
+.eq{font-family:var(--term);font-size:13px;background:var(--surface);border:1px solid var(--rule);
+    border-left:3px solid var(--known);border-radius:4px;padding:12px 16px;margin:18px 0;overflow-x:auto;white-space:nowrap}
+.eq small{display:block;white-space:normal;font-family:var(--body);font-size:12px;color:var(--ink-soft);margin-top:6px}
+/* 卡片组 */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:22px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0}
+.card h3{margin-bottom:6px}
+.card p{font-size:13.5px;margin:.4em 0 0;color:var(--ink-soft)}
+.card.hypo{border-left:3px solid var(--hypo)}
+.card.known{border-left:3px solid var(--known)}
+.neq{font-family:var(--term);font-size:14.5px;color:var(--ink);display:block;margin-bottom:4px;word-break:break-word}
+/* 2×2 选择性矩阵 */
+.m22{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;margin-top:22px;font-size:13px;min-width:0}
+.m22 .rh,.m22 .ch{font-family:var(--term);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);align-self:center}
+.m22 .cell{background:var(--surface);border:1px solid var(--rule);border-radius:5px;padding:12px 14px;min-width:0}
+.m22 .cell b{display:block;font-weight:500;font-size:13.5px}
+.m22 .cell span{color:var(--ink-soft);font-size:12.5px}
+.m22 .target{border:1.5px solid var(--hypo);background:var(--hypo-wash)}
+/* 表 */
+.tablewrap{overflow-x:auto;margin-top:22px;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--term);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500}
+.mark{font-family:var(--term);font-size:14px;font-variant-numeric:tabular-nums}
+.yes{color:var(--known)}
+.no{color:var(--patho)}
+/* 术语表 */
+dl.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 28px;margin:18px 0 0}
+dl.gloss>div{border-bottom:1px solid var(--rule);padding:11px 0;min-width:0}
+dt{font-weight:500;font-size:14px}
+dt span{font-family:var(--term);font-size:11.5px;color:var(--ink-soft);padding-left:.5em}
+dd{margin:3px 0 0;font-size:13px;color:var(--ink-soft)}
+ol.refs{font-size:12.5px;color:var(--ink-soft);padding-left:22px;margin-top:18px}
+ol.refs li{margin:7px 0;word-break:break-word}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<nav class="backnav"><a href="../../index.html">&#8592; 返回目录 / INDEX</a></nav>
+
+<p class="eyebrow">URSA UTSC Case Competition 2026 · 路径二 蛋白清除</p>
+<h1>pTau181 多功能肽：从识别到降解的机制图解</h1>
+<p class="lede">一条"定位 → 尝试解聚 → 自噬递送 → 酶促水解"的设想。本页把每一步拆开，<b>实线</b>画已被广泛验证的细胞生物学，<b>虚线</b>画这个方案自己的假设——也就是评委会追问、而实验必须回答的部分。</p>
+
+<ul class="legend">
+  <li><span class="swatch sw-k"></span>已验证的通用生物学 <span class="t"><em>established</em></span></li>
+  <li><span class="swatch sw-h"></span>本方案的待验证假设 <span class="t"><em>to be tested</em></span></li>
+  <li><span class="swatch sw-p"></span>会让方案失效的分支 <span class="t"><em>failure branch</em></span></li>
+</ul>
+
+<div class="note">
+<strong>摘要里还缺三项信息，所以下面所有"结合位点、速率、效率"都只能定性：</strong>
+① 多功能肽的氨基酸序列与长度 <span class="t"><em>sequence &amp; length</em></span>；
+② 三段功能域之间的连接方式 <span class="t"><em>linker design</em></span>；
+③ 纳米载体配方 <span class="t"><em>carrier formulation</em></span>。
+本页是竞赛方案的机制讲解，不是临床结论。
+</div>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 1200 196" role="img" aria-label="七站流程：纳米载体经摄取进入内体，肽逃逸进入细胞质，识别 pTau181，解聚为较小 tau 物种，经 LIR–LC3 捕获进入自噬体，与溶酶体融合后被水解" style="min-width:860px">
+      <defs>
+        <marker id="ar-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-k" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ar-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-h" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+      <!-- boxes -->
+      <g>
+        <rect class="box" x="16"   y="62" width="128" height="46" rx="5"/><text class="lbl" x="80"   y="83" text-anchor="middle">纳米载体</text><text class="en" x="80"   y="99" text-anchor="middle">nanocarrier</text>
+        <rect class="box" x="190"  y="62" width="128" height="46" rx="5"/><text class="lbl" x="254"  y="83" text-anchor="middle">内体</text><text class="en" x="254"  y="99" text-anchor="middle">endosome</text>
+        <rect class="box" x="364"  y="62" width="128" height="46" rx="5"/><text class="lbl" x="428"  y="83" text-anchor="middle">细胞质</text><text class="en" x="428"  y="99" text-anchor="middle">cytosol</text>
+        <rect class="box" x="538"  y="62" width="128" height="46" rx="5" style="stroke:var(--hypo)"/><text class="lbl" x="602"  y="83" text-anchor="middle">pTau181 寡聚体</text><text class="en" x="602"  y="99" text-anchor="middle">target oligomer</text>
+        <rect class="box" x="712"  y="62" width="128" height="46" rx="5" style="stroke:var(--hypo)"/><text class="lbl" x="776"  y="83" text-anchor="middle">较小 tau 物种</text><text class="en" x="776"  y="99" text-anchor="middle">smaller species</text>
+        <rect class="box" x="886"  y="62" width="128" height="46" rx="5"/><text class="lbl" x="950"  y="83" text-anchor="middle">自噬体</text><text class="en" x="950"  y="99" text-anchor="middle">autophagosome</text>
+        <rect class="box" x="1060" y="62" width="128" height="46" rx="5"/><text class="lbl" x="1124" y="83" text-anchor="middle">溶酶体</text><text class="en" x="1124" y="99" text-anchor="middle">lysosome</text>
+      </g>
+      <!-- arrows -->
+      <line class="k"  x1="150" y1="85" x2="182" y2="85" marker-end="url(#ar-k)"/>
+      <line class="h"  x1="324" y1="85" x2="356" y2="85" marker-end="url(#ar-h)"/>
+      <line class="h"  x1="498" y1="85" x2="530" y2="85" marker-end="url(#ar-h)"/>
+      <line class="hb" x1="672" y1="85" x2="704" y2="85" marker-end="url(#ar-h)"/>
+      <line class="h"  x1="846" y1="85" x2="878" y2="85" marker-end="url(#ar-h)"/>
+      <line class="k"  x1="1020" y1="85" x2="1052" y2="85" marker-end="url(#ar-k)"/>
+      <!-- arrow labels -->
+      <g text-anchor="middle">
+        <text class="arw" x="166"  y="40">摄取</text><text class="arwen" x="166"  y="53">uptake</text>
+        <text class="arw" x="340"  y="40">内体逃逸</text><text class="arwen" x="340"  y="53">escape</text>
+        <text class="arw" x="514"  y="40">识别结合</text><text class="arwen" x="514"  y="53">bind</text>
+        <text class="arw" x="688"  y="40" style="fill:var(--hypo)">解聚</text><text class="arwen" x="688"  y="53" style="fill:var(--hypo)">disaggregate</text>
+        <text class="arw" x="862"  y="40">LIR–LC3 捕获</text><text class="arwen" x="862"  y="53">capture</text>
+        <text class="arw" x="1036" y="40">融合→水解</text><text class="arwen" x="1036" y="53">fuse → hydrolyze</text>
+      </g>
+      <text class="en" x="688" y="140" text-anchor="middle" style="fill:var(--hypo)">↑ 全链条最关键、也最不确定的一步 the load-bearing assumption</text>
+      <path class="ghost" d="M688 118 L688 128"/>
+    </svg>
+  </div>
+  <figcaption><b>图 1 · 全流程。</b>七个站点、六次转换。六条箭头里只有两条（摄取、融合与水解）属于细胞本来就会做的事；中间四条都要靠这个分子自己实现，其中"解聚"这条最吃力。</figcaption>
+</figure>
+
+<!-- ============ 0 分子本体 ============ -->
+<section>
+<span class="step-no">分子本体 / THE MOLECULE</span>
+<h2>三段功能域各自负责什么</h2>
+<p>这是一个<span class="t">模块化设计<em>modular design</em></span>：一段负责找到目标，一段负责动手，一段负责交接。三段共用一条肽链，所以彼此的空间关系会直接影响各自能不能工作。</p>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 900 150" role="img" aria-label="多功能肽的三段功能域：pTau181 结合区、富精氨酸区、LC3 相互作用区，由连接子串联" style="min-width:620px">
+      <rect class="seg-a" x="20"  y="34" width="250" height="44" rx="5"/>
+      <rect class="seg-b" x="290" y="34" width="250" height="44" rx="5"/>
+      <rect class="seg-c" x="560" y="34" width="250" height="44" rx="5"/>
+      <line class="ghost" x1="270" y1="56" x2="290" y2="56"/>
+      <line class="ghost" x1="540" y1="56" x2="560" y2="56"/>
+      <text class="lbl" x="145" y="55" text-anchor="middle">pTau181 结合区</text><text class="en" x="145" y="70" text-anchor="middle">pTau181-binding domain</text>
+      <text class="lbl" x="415" y="55" text-anchor="middle">富精氨酸区</text><text class="en" x="415" y="70" text-anchor="middle">Arg-rich domain</text>
+      <text class="lbl" x="685" y="55" text-anchor="middle">LIR</text><text class="en" x="685" y="70" text-anchor="middle">LC3-interacting region</text>
+      <g text-anchor="middle">
+        <text class="arw" x="145" y="22">找到目标</text>
+        <text class="arw" x="415" y="22">尝试拆散</text>
+        <text class="arw" x="685" y="22">交给自噬</text>
+        <text class="en" x="145" y="104">非共价结合 non-covalent</text>
+        <text class="en" x="415" y="104">侧链带正电 cationic side chain</text>
+        <text class="en" x="685" y="104">核心序列 (W/F/Y)-X-X-(I/L/V)</text>
+      </g>
+      <text class="en" x="280" y="132" text-anchor="middle" style="fill:var(--ink-soft)">连接子 linker：长度与柔性未给出，但决定三段能否同时到位</text>
+      <line class="ghost" x1="20" y1="118" x2="810" y2="118"/>
+      <text class="en" x="690" y="132" text-anchor="middle">N 端／C 端朝向亦未定</text>
+    </svg>
+  </div>
+  <figcaption><b>图 2 · 功能域布局。</b>方框是摘要给出的三项功能；虚线是摘要尚未给出的设计参数。连接子太短，Arg 区可能够不到相邻 tau 分子；太长，整条肽的构象熵会削弱结合。</figcaption>
+</figure>
+</section>
+
+<!-- ============ 1 病理起点 ============ -->
+<section>
+<span class="step-no">第 1 步 / STEP 1</span>
+<h2>病理起点：tau 被磷酸化 <span class="tag tag-k">已验证</span></h2>
+<p>tau 原本<span class="t">稳定<em>stabilize</em></span>神经元<span class="t">微管<em>microtubule</em></span>。在阿尔茨海默病相关病理中，tau 会在多个位点被<span class="t">激酶<em>kinase</em></span><span class="t">磷酸化<em>phosphorylate</em></span>，并形成小型<span class="t">寡聚体<em>oligomer</em></span>，随后可能形成更大的<span class="t">聚集结构<em>aggregate / fibril</em></span>。<b>pTau181</b> 指 tau 第 181 位<span class="t">苏氨酸<em>threonine, Thr</em></span>被磷酸化。</p>
+
+<div class="eq">Tau–Thr181–OH &nbsp;+&nbsp; ATP &nbsp;──[ 激酶 kinase ]──▶&nbsp; Tau–Thr181–OPO₃²⁻ &nbsp;+&nbsp; ADP
+<small>磷酸基给该位置带来负电荷，可能改变 tau 的<span class="t">构象<em>conformation</em></span>与相互作用。这是示意式，不是定量反应式。</small></div>
+
+<div class="cards">
+  <div class="card hypo"><span class="neq">pTau181 ≠ 早期有毒寡聚体</span><p>磷酸化是化学标记，聚集状态是物理状态，两者不能互推。单体也可以带 pTau181。<sup><a href="#r1">1</a></sup></p></div>
+  <div class="card known"><h3>人脑数据支持这种区分</h3><p>对可溶性 tau 的研究发现，不同磷酸化位点与早期多聚化的关系并不相同。<sup><a href="#r2">2</a></sup></p></div>
+</div>
+</section>
+
+<!-- ============ 2 递送 ============ -->
+<section>
+<span class="step-no">第 2 步 / STEP 2</span>
+<h2>递送：两个不同的成功条件 <span class="tag tag-h">待验证</span></h2>
+<p><span class="t">纳米载体<em>nanocarrier</em></span>接触神经元后被<span class="t">内吞<em>endocytose</em></span>，进入<span class="t">内体<em>endosome</em></span>；肽必须再从内体<span class="t">逃逸<em>endosomal escape</em></span>并<span class="t">释放<em>release</em></span>到<span class="t">细胞质<em>cytosol</em></span>，才能接触主要位于细胞内的 tau。</p>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 820 246" role="img" aria-label="递送分叉：载体被摄取进入内体后，肽或逃逸进入细胞质接触 tau，或被困在内体中使后续步骤无法发生" style="min-width:620px">
+      <defs>
+        <marker id="ar-k2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-k" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ar-h2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-h" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ar-p2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-p" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+      <circle class="box" cx="72" cy="124" r="36"/>
+      <rect class="pep" x="58" y="118" width="28" height="7" rx="3"/>
+      <text class="lbl" x="72" y="178" text-anchor="middle">纳米载体</text><text class="en" x="72" y="193" text-anchor="middle">nanocarrier</text>
+
+      <circle class="box" cx="246" cy="124" r="42"/>
+      <circle class="ghost" cx="246" cy="124" r="30"/>
+      <rect class="pep" x="232" y="118" width="28" height="7" rx="3"/>
+      <text class="lbl" x="246" y="186" text-anchor="middle">内体</text><text class="en" x="246" y="201" text-anchor="middle">endosome</text>
+
+      <line class="k" x1="114" y1="124" x2="196" y2="124" marker-end="url(#ar-k2)"/>
+      <text class="arw" x="155" y="106" text-anchor="middle">摄取</text><text class="arwen" x="155" y="119" text-anchor="middle">uptake</text>
+
+      <path class="h" d="M292 104 C360 74 390 62 452 56" marker-end="url(#ar-h2)"/>
+      <path class="p" d="M292 146 C360 178 390 192 452 198" marker-end="url(#ar-p2)"/>
+
+      <rect class="box" x="462" y="26" width="336" height="58" rx="5" style="stroke:var(--hypo)"/>
+      <text class="lbl" x="478" y="50">肽到达细胞质 → 可以接触 tau</text>
+      <text class="en" x="478" y="68">peptide reaches cytosol — the step that must be proven</text>
+
+      <rect class="box" x="462" y="170" width="336" height="58" rx="5" style="stroke:var(--patho)"/>
+      <text class="lbl" x="478" y="194">肽困在内体 → 后面全部不发生</text>
+      <text class="en" x="478" y="212">endosomal entrapment — recognition and disassembly never start</text>
+
+      <text class="arw" x="372" y="78" text-anchor="middle" style="fill:var(--hypo)">逃逸</text>
+      <text class="arw" x="372" y="176" text-anchor="middle" style="fill:var(--patho)">未逃逸</text>
+    </svg>
+  </div>
+  <figcaption><b>图 3 · 载体进细胞 ≠ 肽进细胞质。</b>共聚焦看到载体在细胞内，只证明了上半句。已有用<span class="t">脂质体<em>liposome</em></span>递送 tau 抑制肽的研究说明这个方向可做，但不能替你们这一版配方证明递送效率。<sup><a href="#r3">3</a></sup>若设想体内给药，还要另外证明能进入脑组织。</figcaption>
+</figure>
+</section>
+
+<!-- ============ 3 识别 ============ -->
+<section>
+<span class="step-no">第 3 步 / STEP 3</span>
+<h2>识别：要证明的是两层选择性 <span class="tag tag-h">待验证</span></h2>
+<p>第一段功能域<span class="t">识别<em>recognize</em></span>含磷酸化 Thr181 的区域，靠的是<span class="t">非共价结合<em>non-covalent binding</em></span>——磷酸基与结合肽之间的<span class="t">静电作用<em>electrostatic interaction</em></span>、<span class="t">氢键<em>hydrogen bond</em></span>，以及周围氨基酸决定的<span class="t">形状匹配<em>shape complementarity</em></span>。它不把 tau 化学切断。</p>
+
+<div class="m22">
+  <div></div>
+  <div class="ch">单体 monomer</div>
+  <div class="ch">早期寡聚体 early oligomer</div>
+
+  <div class="rh">带 pTau181</div>
+  <div class="cell"><b>要排除</b><span>带标记但不是目标；结合它只是消耗分子</span></div>
+  <div class="cell target"><b>目标</b><span>intended target — 第二层选择性要证明的就是这一格</span></div>
+
+  <div class="rh">未磷酸化</div>
+  <div class="cell"><b>要排除</b><span>第一层选择性：对 pTau181 的偏好</span></div>
+  <div class="cell"><b>要排除</b><span>聚集但无标记，不应被优先结合</span></div>
+</div>
+<p style="font-size:13px;color:var(--ink-soft);margin-top:14px">第二层（同样带 pTau181，为什么更愿意结合寡聚体而不是单体）<b>不能从"识别 pTau181"自动推出</b>。而且邻近位点的磷酸化本身就可能改变 pTau181 识别分子的结合能力。<sup><a href="#r4">4</a></sup></p>
+</section>
+
+<!-- ============ 4 Arg 解聚 ============ -->
+<section>
+<span class="step-no">第 4 步 / STEP 4</span>
+<h2>Arg 区：方案的承重墙 <span class="tag tag-h">待验证</span></h2>
+<p><span class="t">精氨酸<em>arginine, Arg, R</em></span>的侧链在生理条件下通常带正电。假设是：结合区先把 Arg 区<span class="t">带到<em>deliver</em></span>寡聚体旁，Arg 再<span class="t">干扰<em>disrupt</em></span>维系 tau 分子之间的相互作用，使大寡聚体变小。</p>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 880 286" role="img" aria-label="同一次 Arg 与寡聚体的接触有两种可能结果：分子间接触被破坏生成较小 tau 物种，或 Arg 区只是贴附在聚集体表面" style="min-width:660px">
+      <defs>
+        <marker id="ar-h3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-h" d="M0 0 L10 5 L0 10 z"/></marker>
+        <marker id="ar-p3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-p" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+      <!-- oligomer -->
+      <g>
+        <rect class="tau" x="34"  y="108" width="56" height="18" rx="9"/>
+        <rect class="tau" x="62"  y="130" width="56" height="18" rx="9"/>
+        <rect class="tau" x="34"  y="152" width="56" height="18" rx="9"/>
+        <rect class="tau" x="62"  y="174" width="56" height="18" rx="9"/>
+        <text class="lbl" x="76" y="212" text-anchor="middle">tau 寡聚体</text><text class="en" x="76" y="227" text-anchor="middle">oligomer</text>
+        <text class="en" x="76" y="92" text-anchor="middle">分子间接触 inter-molecular contacts</text>
+      </g>
+      <!-- peptide -->
+      <g>
+        <rect class="seg-a" x="162" y="118" width="46" height="16" rx="5"/>
+        <rect class="seg-b" x="210" y="118" width="46" height="16" rx="5"/>
+        <text class="en" x="185" y="112" text-anchor="middle">结合区</text>
+        <text class="en" x="233" y="112" text-anchor="middle" style="fill:var(--hypo)">Arg 区</text>
+        <text class="en" x="208" y="150" text-anchor="middle">被结合区带到近处 brought into proximity</text>
+      </g>
+      <circle class="ghost" cx="300" cy="150" r="34"/>
+      <text class="en" x="300" y="146" text-anchor="middle">接触</text>
+      <text class="en" x="300" y="160" text-anchor="middle">contact</text>
+      <line class="h" x1="262" y1="132" x2="272" y2="140"/>
+
+      <path class="h" d="M336 130 C396 100 420 86 476 76" marker-end="url(#ar-h3)"/>
+      <path class="p" d="M336 172 C396 202 420 216 476 226" marker-end="url(#ar-p3)"/>
+
+      <!-- outcome A -->
+      <rect class="box" x="486" y="36" width="376" height="76" rx="5" style="stroke:var(--hypo)"/>
+      <text class="lbl" x="502" y="60">分子间接触被破坏 → 较小 tau 物种</text>
+      <text class="en" x="502" y="78">intended: contacts disrupted → smaller tau species</text>
+      <text class="en" x="502" y="96" style="fill:var(--hypo)">注意：产物不是 “tau fragments”，肽键还没断</text>
+
+      <!-- outcome B -->
+      <rect class="box" x="486" y="186" width="376" height="76" rx="5" style="stroke:var(--patho)"/>
+      <text class="lbl" x="502" y="210">Arg 区贴附在聚集体表面 → 聚集体仍在</text>
+      <text class="en" x="502" y="228">also reported: Arg-rich segments bind tau fibrils</text>
+      <text class="en" x="502" y="246" style="fill:var(--patho)">带正电本身不保证能拆散已经形成的寡聚体</text>
+
+      <text class="arw" x="406" y="104" text-anchor="middle" style="fill:var(--hypo)">预期</text>
+      <text class="arw" x="406" y="200" text-anchor="middle" style="fill:var(--patho)">同样可能</text>
+    </svg>
+  </div>
+  <figcaption><b>图 4 · 一次接触，两种结局。</b>寡聚体不是只靠一种<span class="t">盐桥<em>salt bridge</em></span>维持；<span class="t">氢键<em>hydrogen bond</em></span>、<span class="t">疏水作用<em>hydrophobic interaction</em></span>及其他接触都可能参与。已有实验观察到富 Arg 的区域会<b>结合</b> tau 纤维。<sup><a href="#r5">5</a></sup>方案要成立，必须用实验排除下面那条分支。</figcaption>
+</figure>
+
+<div class="cards">
+  <div class="card hypo"><span class="neq">解聚 ≠ 切割</span><p><span class="t">解聚<em>disaggregate</em></span>破坏的是分子<b>之间</b>的非共价接触；<span class="t">切割<em>cleave</em></span>断的是分子<b>内部</b>的<span class="t">肽键<em>peptide bond</em></span>。真正断肽键的步骤在第 6 步的溶酶体里。</p></div>
+  <div class="card known"><h3>所以产物该怎么称呼</h3><p>第 4 步的产物叫"较小的 tau 聚集体或游离 tau 分子"，不叫 <span class="t"><em>tau fragments</em></span>。用词错了，评委会直接质疑机制理解。</p></div>
+</div>
+</section>
+
+<!-- ============ 5 LIR ============ -->
+<section>
+<span class="step-no">第 5 步 / STEP 5</span>
+<h2>LIR：把 tau 挂到自噬膜上 <span class="tag tag-k">结合机制已知</span> <span class="tag tag-h">清除结果待验证</span></h2>
+<p>细胞形成<span class="t">自噬体<em>autophagosome</em></span>时，LC3 经 ATG7、ATG3 及 ATG12–ATG5–ATG16L1 参与的过程与膜脂<span class="t">磷脂酰乙醇胺<em>phosphatidylethanolamine, PE</em></span><span class="t">脂质化偶联<em>lipidate</em></span>，成为膜结合形式 LC3-II。<sup><a href="#r7">7</a></sup></p>
+
+<div class="eq">LC3-I &nbsp;+&nbsp; PE &nbsp;──[ ATG7 / ATG3 / ATG12–ATG5–ATG16L1 ]──▶&nbsp; LC3-II（LC3–PE）
+<small>示意式。LC3-II 锚在自噬体膜上，成为 LIR 可以抓住的把手。</small></div>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 820 256" role="img" aria-label="LIR 结合自噬体膜上的 LC3-II，把 tau 通过多功能肽系在正在形成的自噬膜上，膜随后包裹 tau" style="min-width:620px">
+      <defs>
+        <marker id="ar-h4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-h" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+      <!-- membrane -->
+      <path d="M40 212 C230 142 590 142 780 212" fill="none" stroke="var(--known)" stroke-width="7" stroke-linecap="round"/>
+      <text class="en" x="410" y="240" text-anchor="middle">正在形成的自噬体膜 forming autophagosome membrane（含 PE）</text>
+      <!-- LC3-II anchors -->
+      <g>
+        <line x1="210" y1="170" x2="210" y2="150" stroke="var(--known)" stroke-width="2"/><circle cx="210" cy="142" r="9" fill="var(--known-wash)" stroke="var(--known)" stroke-width="1.5"/>
+        <line x1="410" y1="158" x2="410" y2="134" stroke="var(--known)" stroke-width="2"/><circle cx="410" cy="126" r="11" fill="var(--known-wash)" stroke="var(--known)" stroke-width="2"/>
+        <line x1="610" y1="170" x2="610" y2="150" stroke="var(--known)" stroke-width="2"/><circle cx="610" cy="142" r="9" fill="var(--known-wash)" stroke="var(--known)" stroke-width="1.5"/>
+        <text class="en" x="410" y="108" text-anchor="middle">LC3-II（膜结合型 membrane-bound）</text>
+      </g>
+      <!-- tau + peptide tether -->
+      <g>
+        <rect class="tau" x="470" y="48" width="58" height="18" rx="9"/>
+        <rect class="tau" x="498" y="30" width="58" height="18" rx="9"/>
+        <text class="en" x="560" y="44" text-anchor="start">较小 tau 物种</text>
+        <rect class="seg-a" x="412" y="62" width="40" height="15" rx="5"/>
+        <rect class="seg-b" x="372" y="62" width="40" height="15" rx="5"/>
+        <rect class="seg-c" x="332" y="62" width="40" height="15" rx="5"/>
+        <text class="en" x="352" y="58" text-anchor="middle">LIR</text>
+        <text class="en" x="432" y="58" text-anchor="middle">结合区</text>
+      </g>
+      <path class="h" d="M348 82 C356 100 380 112 398 120" marker-end="url(#ar-h4)"/>
+      <text class="arw" x="300" y="100" text-anchor="middle" style="fill:var(--hypo)">非共价结合</text>
+      <text class="arwen" x="300" y="113" text-anchor="middle">non-covalent</text>
+      <!-- engulf -->
+      <path class="h" d="M690 150 C730 120 736 86 712 62" marker-end="url(#ar-h4)"/>
+      <text class="arw" x="762" y="112" text-anchor="middle" style="fill:var(--hypo)">包裹</text>
+      <text class="arwen" x="762" y="125" text-anchor="middle">engulf</text>
+      <text class="en" x="150" y="68" text-anchor="start">连成一体：tau — 多功能肽 — LC3-II</text>
+      <text class="en" x="150" y="84" text-anchor="start">a tau–peptide–LC3 tether</text>
+    </svg>
+  </div>
+  <figcaption><b>图 5 · 挂上去，不等于清掉。</b>许多 LIR 的核心序列符合 <span class="t"><em>(W/F/Y)-X-X-(I/L/V)</em></span>，但具体序列与周围结构会影响它与 LC3 家族蛋白的结合。<sup><a href="#r6">6</a></sup>结合 LC3 只是<b>中间证据</b>：还须证明 tau 确实被包裹、自噬体能<span class="t">成熟<em>mature</em></span>、并最终完成降解。</figcaption>
+</figure>
+</section>
+
+<!-- ============ 6 溶酶体 ============ -->
+<section>
+<span class="step-no">第 6 步 / STEP 6</span>
+<h2>溶酶体：真正的降解发生在这里 <span class="tag tag-k">已验证</span></h2>
+<p>自噬体与<span class="t">溶酶体<em>lysosome</em></span><span class="t">融合<em>fuse</em></span>成<span class="t">自噬溶酶体<em>autolysosome</em></span>。其中的<span class="t">蛋白酶<em>protease / cathepsin</em></span>通过<span class="t">水解<em>hydrolyze</em></span>逐步断开 tau 的肽键，生成更短的肽和氨基酸。</p>
+
+<figure>
+  <div class="scroll">
+    <svg viewBox="0 0 720 206" role="img" aria-label="自噬体与溶酶体融合为自噬溶酶体，蛋白酶水解 tau 的肽键" style="min-width:560px">
+      <defs>
+        <marker id="ar-k3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-k" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+      <circle class="box" cx="86" cy="96" r="52" style="stroke:var(--known);stroke-width:2.5"/>
+      <rect class="tau" x="62" y="84" width="46" height="15" rx="7"/>
+      <rect class="pep" x="68" y="104" width="34" height="8" rx="4"/>
+      <text class="lbl" x="86" y="170" text-anchor="middle">自噬体</text><text class="en" x="86" y="185" text-anchor="middle">autophagosome</text>
+
+      <text class="lbl" x="176" y="102" text-anchor="middle">+</text>
+
+      <circle class="box" cx="266" cy="96" r="44" style="stroke:var(--known);stroke-width:2.5"/>
+      <circle cx="252" cy="88" r="4" fill="var(--known)"/><circle cx="276" cy="94" r="4" fill="var(--known)"/><circle cx="262" cy="108" r="4" fill="var(--known)"/>
+      <text class="lbl" x="266" y="162" text-anchor="middle">溶酶体</text><text class="en" x="266" y="177" text-anchor="middle">lysosome · protease</text>
+
+      <line class="k" x1="316" y1="96" x2="378" y2="96" marker-end="url(#ar-k3)"/>
+      <text class="arw" x="347" y="78" text-anchor="middle">融合</text><text class="arwen" x="347" y="91" text-anchor="middle">fuse</text>
+
+      <circle class="box" cx="500" cy="96" r="58" style="stroke:var(--known);stroke-width:2.5"/>
+      <g fill="var(--patho)">
+        <circle cx="480" cy="84" r="3"/><circle cx="498" cy="78" r="3"/><circle cx="516" cy="90" r="3"/>
+        <circle cx="486" cy="104" r="3"/><circle cx="508" cy="110" r="3"/><circle cx="524" cy="74" r="3"/>
+      </g>
+      <text class="lbl" x="500" y="176" text-anchor="middle">自噬溶酶体</text><text class="en" x="500" y="191" text-anchor="middle">autolysosome</text>
+      <text class="en" x="640" y="92" text-anchor="middle">短肽</text>
+      <text class="en" x="640" y="107" text-anchor="middle">氨基酸</text>
+      <line class="k" x1="562" y1="96" x2="604" y2="96" marker-end="url(#ar-k3)"/>
+      <text class="arwen" x="583" y="86" text-anchor="middle">hydrolysis</text>
+    </svg>
+  </div>
+  <figcaption><b>图 6 · 这一步才叫蛋白降解。</b>已有 tau 靶向自噬研究通过阻断溶酶体功能或干扰自噬相关蛋白，来检验 tau 减少是否真的依赖这条通路。<sup><a href="#r8">8</a></sup>这正是你们该照着做的对照。</figcaption>
+</figure>
+
+<div class="eq" style="border-left-color:var(--known)">蛋白质中的 –CO–NH– &nbsp;+&nbsp; H₂O &nbsp;──[ 蛋白酶 protease ]──▶&nbsp; 较短的肽 / 氨基酸
+<small>这是全流程中唯一真正断开<span class="t">肽键<em>peptide bond</em></span>的化学步骤。</small></div>
+</section>
+
+<!-- ============ 7 四个区别 ============ -->
+<section>
+<span class="step-no">读图要点 / FOUR DISTINCTIONS</span>
+<h2>四个必须分清的区别</h2>
+<p>这四条是整页的逻辑骨架。被问住的队伍，通常是把左边当成了右边。</p>
+<div class="cards">
+  <div class="card hypo"><span class="neq">pTau181 ≠ 寡聚体</span><p>磷酸化标志 <span class="t"><em>a chemical mark</em></span> 不等于聚集状态 <span class="t"><em>an assembly state</em></span>。</p></div>
+  <div class="card hypo"><span class="neq">摄取 ≠ 胞质递送</span><p>载体进细胞 <span class="t"><em>uptake</em></span> 不等于肽出内体 <span class="t"><em>endosomal escape</em></span>。</p></div>
+  <div class="card hypo"><span class="neq">解聚 ≠ 切割</span><p>破坏非共价接触 <span class="t"><em>disassembly</em></span> 不等于断裂肽键 <span class="t"><em>proteolysis</em></span>。</p></div>
+  <div class="card hypo"><span class="neq">结合 LC3 ≠ 完成清除</span><p>中间证据 <span class="t"><em>intermediate</em></span> 不等于终点证据 <span class="t"><em>endpoint: flux &amp; total tau</em></span>。</p></div>
+</div>
+</section>
+
+<!-- ============ 8 证据表 ============ -->
+<section>
+<span class="step-no">验证 / EVIDENCE CHAIN</span>
+<h2>怎样证明"全流程"真的发生</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th>要回答的问题</th><th>摘要已有的方法能说明什么</th><th>还需要辨别什么</th></tr></thead>
+<tbody>
+<tr>
+  <td>找到了目标吗？<br><span class="en" style="font-family:var(--term);font-size:11px;color:var(--ink-soft)">target engagement</span></td>
+  <td>ELISA、<span class="t">表面等离子共振<em>SPR</em></span>可测结合与 <span class="t">解离常数<em>K</em></span><sub>D</sub></td>
+  <td>分别比较 pTau181 与未磷酸化 tau；再比较单体与早期寡聚体（见上面的 2×2）</td>
+</tr>
+<tr>
+  <td>真的拆散了已有寡聚体吗？<br><span class="en" style="font-family:var(--term);font-size:11px;color:var(--ink-soft)">disassembly of pre-formed species</span></td>
+  <td><span class="t">硫黄素 T<em>Thioflavin T, ThT</em></span>可反映部分淀粉样结构信号</td>
+  <td>必须对<b>预先形成</b>的寡聚体测大小和数量；ThT 下降本身不能证明解聚，分子也可能干扰染料信号<sup><a href="#r9">9</a></sup></td>
+</tr>
+<tr>
+  <td>真的进了溶酶体并被降解吗？<br><span class="en" style="font-family:var(--term);font-size:11px;color:var(--ink-soft)">degradation, not relocation</span></td>
+  <td><span class="t">共聚焦<em>confocal</em></span>可显示<span class="t">共定位<em>colocalization</em></span></td>
+  <td>同时测 tau 总量和<span class="t">自噬通量<em>autophagic flux</em></span>；<span class="t">阻断<em>block</em></span>溶酶体或自噬时，清除效果应当减弱</td>
+</tr>
+<tr>
+  <td>最终更安全吗？<br><span class="en" style="font-family:var(--term);font-size:11px;color:var(--ink-soft)">net benefit</span></td>
+  <td>神经元<span class="t">存活率<em>viability</em></span>可检验结果</td>
+  <td>测较小 tau 物种的毒性和再次诱导聚集的能力——拆小后未及时清除，可能留下有活性的<span class="t">"种子"<em>seeds</em></span><sup><a href="#r10">10</a></sup></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============ 9 删除对照 ============ -->
+<section>
+<span class="step-no">关键实验 / MODULE DROPOUT</span>
+<h2>最能检验你们独特机制的一组对照</h2>
+<p>把三段功能域<span class="t">逐一失活<em>ablate one at a time</em></span>，看哪些读数塌掉。下表是<b>"若机制成立应当看到的模式"</b>，不是实验结果。</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>构建体</th><th>已有寡聚体减少</th><th>溶酶体依赖的清除</th><th>神经元毒性降低</th></tr></thead>
+<tbody>
+<tr><td>完整分子 <span class="t"><em>full-length</em></span></td><td class="mark yes">✓</td><td class="mark yes">✓</td><td class="mark yes">✓</td></tr>
+<tr><td>去掉 Arg 区 <span class="t"><em>ΔArg</em></span></td><td class="mark no">✗</td><td class="mark" style="color:var(--ink-soft)">部分</td><td class="mark no">✗</td></tr>
+<tr><td>LIR 失去结合能力 <span class="t"><em>LIR-dead</em></span></td><td class="mark yes">✓</td><td class="mark no">✗</td><td class="mark no">✗</td></tr>
+<tr><td>识别区失去结合能力 <span class="t"><em>binder-dead</em></span></td><td class="mark no">✗</td><td class="mark no">✗</td><td class="mark no">✗</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note" style="border-left-color:var(--hypo)">
+<strong>读法：</strong>只有当<b>完整分子同时做到三件事</b>、而每个删除版本各自丢掉可预测的那一项时，你们提出的各模块作用才形成一条完整证据链。<br>
+注意第二行：ΔArg 仍可能保留部分清除能力——因为"结合 + 挂到 LC3"本身就可以把 tau 送进自噬，<b>不需要先解聚</b>。这一行恰好是评委检验"Arg 区到底有没有用"的地方。
+</div>
+</section>
+
+<!-- ============ 10 术语表 ============ -->
+<section>
+<span class="step-no">对照表 / GLOSSARY</span>
+<h2>术语中英对照</h2>
+
+<h3 style="margin-top:22px">名词 Nouns</h3>
+<dl class="gloss">
+<div><dt>微管<span>microtubule</span></dt><dd>神经元内的管状结构，tau 原本协助稳定它。</dd></div>
+<div><dt>寡聚体<span>oligomer</span></dt><dd>少数几个 tau 分子靠非共价接触聚在一起的小集合体。</dd></div>
+<div><dt>纤维／原纤维<span>fibril</span></dt><dd>更大、更有序的聚集结构。</dd></div>
+<div><dt>激酶<span>kinase</span></dt><dd>催化磷酸化的酶。</dd></div>
+<div><dt>pTau181<span>phospho-tau at Thr181</span></dt><dd>第 181 位苏氨酸被磷酸化的 tau；是化学标记，不代表聚集状态。</dd></div>
+<div><dt>纳米载体<span>nanocarrier</span></dt><dd>保护并运送肽的颗粒；配方未在摘要中给出。</dd></div>
+<div><dt>内体<span>endosome</span></dt><dd>细胞摄取后形成的膜性小室；肽必须从中逃逸。</dd></div>
+<div><dt>细胞质／胞质溶胶<span>cytosol</span></dt><dd>tau 主要所在的区室，也是作用必须发生的地方。</dd></div>
+<div><dt>功能域<span>domain</span></dt><dd>肽链上承担某一功能的一段。</dd></div>
+<div><dt>精氨酸<span>arginine (Arg, R)</span></dt><dd>侧链在生理条件下通常带正电的氨基酸。</dd></div>
+<div><dt>盐桥<span>salt bridge</span></dt><dd>带相反电荷基团间的静电相互作用。</dd></div>
+<div><dt>LIR<span>LC3-interacting region</span></dt><dd>与 LC3 相互作用的短肽区域，核心序列常为 (W/F/Y)-X-X-(I/L/V)。</dd></div>
+<div><dt>LC3-I / LC3-II<span>LC3 forms</span></dt><dd>LC3-I 为游离型，与 PE 偶联后成为膜结合型 LC3-II。</dd></div>
+<div><dt>磷脂酰乙醇胺<span>phosphatidylethanolamine, PE</span></dt><dd>与 LC3 偶联的膜脂。</dd></div>
+<div><dt>自噬体<span>autophagosome</span></dt><dd>双膜囊泡，包裹待降解物。</dd></div>
+<div><dt>自噬溶酶体<span>autolysosome</span></dt><dd>自噬体与溶酶体融合后的区室。</dd></div>
+<div><dt>蛋白酶<span>protease / cathepsin</span></dt><dd>催化肽键水解的酶，溶酶体中含量丰富。</dd></div>
+<div><dt>肽键<span>peptide bond</span></dt><dd>–CO–NH–；蛋白质分子内部的共价键。</dd></div>
+<div><dt>自噬通量<span>autophagic flux</span></dt><dd>物质经自噬通路被清除的速率，不是某一时刻的自噬体数量。</dd></div>
+<div><dt>种子／接种活性<span>seed / seeding competence</span></dt><dd>小聚集体诱导新聚集的能力；拆小后若未清除可能留下它。</dd></div>
+<div><dt>解离常数<span>dissociation constant, K<sub>D</sub></span></dt><dd>结合强度的定量指标，越小越紧。</dd></div>
+<div><dt>硫黄素 T<span>Thioflavin T, ThT</span></dt><dd>与部分淀粉样结构结合后荧光增强的染料。</dd></div>
+</dl>
+
+<h3 style="margin-top:30px">动词 Verbs</h3>
+<dl class="gloss">
+<div><dt>磷酸化<span>phosphorylate</span></dt><dd>在特定残基上加磷酸基；本例中由激酶催化，消耗 ATP。</dd></div>
+<div><dt>聚集<span>aggregate</span></dt><dd>多个分子通过非共价接触聚在一起。</dd></div>
+<div><dt>摄取／内吞<span>take up / endocytose</span></dt><dd>细胞把载体包入膜性小室带进胞内。</dd></div>
+<div><dt>内体逃逸<span>escape the endosome</span></dt><dd>从内体进入细胞质；这是递送能否成立的第二道关。</dd></div>
+<div><dt>识别<span>recognize</span></dt><dd>在众多分子中选择性接触目标结构。</dd></div>
+<div><dt>结合<span>bind</span></dt><dd>本方案中指非共价结合，不改变共价结构。</dd></div>
+<div><dt>解聚／拆散<span>disaggregate / disassemble</span></dt><dd>破坏分子<b>之间</b>的接触，使聚集体变小；<b>不断肽键</b>。</dd></div>
+<div><dt>切割<span>cleave</span></dt><dd>断开分子<b>内部</b>的肽键；本流程中只发生在溶酶体。</dd></div>
+<div><dt>招募<span>recruit</span></dt><dd>把某个组分拉到特定位置，如把 LC3 拉到 tau 附近。</dd></div>
+<div><dt>脂质化／偶联<span>lipidate / conjugate</span></dt><dd>把脂分子共价连到蛋白上，如 LC3-I 与 PE 生成 LC3-II。</dd></div>
+<div><dt>包裹／隔离<span>engulf / sequester</span></dt><dd>自噬膜把货物围进囊泡内部。</dd></div>
+<div><dt>融合<span>fuse</span></dt><dd>两个膜性区室合并成一个。</dd></div>
+<div><dt>水解<span>hydrolyze</span></dt><dd>以水参与断开共价键；本例断肽键。</dd></div>
+<div><dt>降解／清除<span>degrade / clear</span></dt><dd>把蛋白分解到不再具有功能或毒性。</dd></div>
+<div><dt>阻断／抑制<span>block / inhibit</span></dt><dd>实验手段：关掉某条通路，看效果是否随之消失。</dd></div>
+<div><dt>失活／删除模块<span>ablate / delete</span></dt><dd>让某一功能域失去能力，用于归因。</dd></div>
+</dl>
+</section>
+
+<!-- ============ 11 结论 ============ -->
+<section>
+<span class="step-no">结论 / BOTTOM LINE</span>
+<h2>核心结论</h2>
+<p>这套方法在生物学上可以解释为"<b>定位 — 尝试解聚 — 自噬递送 — 酶促水解</b>"。其中三项必须明确表述为待实验检验的假设：</p>
+<div class="cards">
+  <div class="card hypo"><h3>① pTau181 的精准识别</h3><p>尤其是对<b>早期寡聚体而非单体</b>的偏好。</p></div>
+  <div class="card hypo"><h3>② Arg 区对已有寡聚体的解聚</h3><p>而不是只贴附在它们表面。</p></div>
+  <div class="card hypo"><h3>③ 解聚产物被及时清除</h3><p>否则可能留下有接种活性的小物种。</p></div>
+</div>
+<p style="margin-top:20px">把这三条写成"假设 + 判别实验"，而不是写成已成立的结论——这通常是机制类方案在评审中最被看重的地方。</p>
+
+<ol class="refs">
+<li id="r1">磷酸化与 tau 聚集的关系 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5576827/">PMC5576827</a></li>
+<li id="r2">人脑可溶性 tau 的磷酸化位点与早期多聚化 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6892178/">PMC6892178</a></li>
+<li id="r3">脂质体递送 tau 抑制肽 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11163028/">PMC11163028</a></li>
+<li id="r4">邻近磷酸化影响 pTau181 抗体结合 — <a href="https://pubmed.ncbi.nlm.nih.gov/38014879/">PubMed 38014879</a></li>
+<li id="r5">富 Arg 区域与 tau 纤维的相互作用 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6989696/">PMC6989696</a></li>
+<li id="r6">LIR 与 LC3 的结合 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6755805/">PMC6755805</a></li>
+<li id="r7">LC3 脂质化 — <a href="https://pubmed.ncbi.nlm.nih.gov/18321988/">PubMed 18321988</a></li>
+<li id="r8">tau 靶向自噬清除及其通路依赖性检验 — <a href="https://www.thno.org/v15p9240.htm">Theranostics 15:9240</a></li>
+<li id="r9">染料信号干扰 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2880406/">PMC2880406</a></li>
+<li id="r10">较小 tau 聚集体的毒性与接种能力 — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6201727/">PMC6201727</a></li>
+</ol>
+</section>
+
+<footer>
+本页依据你们 URSA 摘要中的设计绘制（路径二：蛋白清除／降解）。摘要未给出肽序列、连接方式与载体配方，因此图中不含具体结合位点、反应速率与递送效率。参考文献用于支持通用生物学背景，不代表对本方案有效性的验证。<br>
+用途：竞赛方案的机制讲解与自查，非临床建议。
+</footer>
+
+</div>
+
+</body>
+</html>
