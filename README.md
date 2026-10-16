@@ -8,7 +8,6 @@
 
 专业名词与动词在正文旁直接给出中英对照，页末另有术语表。
 
-在线阅读：<https://uugyfgyb.github.io/Neuro-Mechanism-Graph/>
 
 ## 专题
 
